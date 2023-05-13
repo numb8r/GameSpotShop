@@ -18,7 +18,21 @@ migrate = Migrate(app, db)
 
 login = LoginManager(app)
 
-@app.route('/singup', methods=['GET', 'POST']) #Реєстрація
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('index')
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+def home_page():
+    return 'Hello'
+
+@app.route('/singup', methods=['GET', 'POST'])
 def signup():
     form = Registration()
     if form.validate_on_submit():
@@ -31,7 +45,7 @@ def signup():
         return redirect(url_for('login'))
     return render_template('authorization/register.html', title='Реєстрація', form=form)
 
-@app.route('/log_in', methods=['GET', 'POST']) #вхід на акк
+@app.route('/log_in', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
        return redirect('index')
