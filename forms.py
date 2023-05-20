@@ -7,7 +7,7 @@ from wtforms.validators import Length
 class Registration(FlaskForm):
     name = StringField('Імя', validators=[DataRequired('Не може бути пусте')])
     password = PasswordField('Пароль', validators=[DataRequired('Не може бути пусте')])
-    email = StringField('Почта', validators=[DataRequired('Не може бути пусте'), Email])
+    email = StringField('Почта', validators=[DataRequired('Не може бути пусте'), Email()])
     submit = SubmitField('Підтвердити')
 
 
