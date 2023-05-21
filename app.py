@@ -17,9 +17,18 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 login = LoginManager(app)
-
+login.login_view = 'login'
+# @app.route('/logout')
+# @login_required
+# def logout():
+#     logout_user()
+#     return redirect(url_for('app.db'))
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 @app.route('/login', methods=['GET', 'POST'])
+@login_required
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -39,15 +48,11 @@ def login():
     return render_template("login.html", user=current_user)
 
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('app.login'))
+
 
 
 @app.route('/', methods=['GET', 'POST'])
-@login_required
+
 def home():
     if request.method == 'POST':
         product = request.form.get('note')
