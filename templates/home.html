@@ -1,0 +1,52 @@
+{% extends "home.html" %}
+
+{% block content %}
+<h1 xmlns="http://www.w3.org/1999/html">Hi, {{ user.username }}!</h1>
+    {% for post in posts %}
+<link rel="stylesheet" href="styles.css">
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-mb-4">
+                <div class="product">
+                    <div  class="image">
+                        <img src="https://redragon.ru/public/r/300x300/products/8265/d1111cec.png" alt="">
+                    </div>
+                    <div class="info">
+                        <h3>Keyboard</h3>
+                        <div>
+                            <span class="price">56<small>$</small></span>
+                            <button class="add-to-cart"><a href="/button1">buy</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<div class="container">
+        <div class="row">
+
+            <div class="col-mb-4">
+                <div class="product">
+                    <div  class="image">
+                        <img src="https://apple11.ru/31171-new/apple-iphone-14-128gb-blue.jpg" alt="">
+                    </div>
+                    <div class="info">
+                        <h3>Iphone 14 pro max</h3>
+                        <div>
+                            <span class="price">1449<small>$</small></span>
+                            <button class="add-to-cart"><a href="/button2">buy</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+{% endfor %}
+
+{% endblock %}

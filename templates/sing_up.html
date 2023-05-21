@@ -1,33 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sing up</title>
-</head>
-<script src="/styles/styles.css"></script>
-<body>
-    <div class="container">
-        <div class="card">
-            <a class="singup">Sign Up</a>
-            <div class="inputBox1">
-                <input type="text" required="required">
-                <span class="user">Email</span>
-            </div>
-
-            <div class="inputBox">
-                <input type="text" required="required">
-                <span>Username</span>
-            </div>
-
-            <div class="inputBox">
-                <input type="password" required="required">
-                <span>Password</span>
-            </div>
-
-            <button class="enter">Enter</button>
-
-        </div>
-    </div>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<div class="form text-center row justify-content-center">
+    <form action="" method="post" class="col-6 p-2 justify-content-center form-inline">
+        {{ form.hidden_tag() }}
+        {{ form.name.label }}
+        {{ form.name(class_='form-control') }}
+        {% for error in form.name.errors %}
+            <p style="color: red;">[{{error}}]</p>
+        {% endfor %}
+        {{ form.username.label }}
+        {{ form.username(class_='form-control') }}
+        {% for error in form.username.errors %}
+            <p style="color: red;">[{{error}}]</p>
+        {% endfor %}
+        {{ form.password.label }}
+        {{ form.password(class_='form-control') }}
+        {% for error in form.password.errors %}
+            <p style="color: red;">[{{error}}]</p>
+        {% endfor %}
+        {{ form.email.label }}
+        {{ form.email(class_='form-control') }}
+        {% for error in form.email.errors %}
+            <p style="color: red;">[{{error}}]</p>
+        {% endfor %}
+        {{ form.recomendation.label }}
+        {{ form.recomendation(class_='form-control') }}
+        {% for error in form.recomendation.errors %}
+            <p style="color: red;">[{{error}}]</p>
+        {% endfor %}
+        {{ form.submit(class_='form-control my-3 col-sm-3') }}
+    </form>
+</div>
+{% endblock %}

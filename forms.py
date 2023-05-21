@@ -5,17 +5,17 @@ from wtforms.validators import Length
 
 
 class Registration(FlaskForm):
-    name = StringField('Імя', validators=[DataRequired('Не може бути пусте')])
-    password = PasswordField('Пароль', validators=[DataRequired('Не може бути пусте')])
-    email = StringField('Почта', validators=[DataRequired('Не може бути пусте'), Email()])
-    submit = SubmitField('Підтвердити')
+    name = StringField('Username', validators=[DataRequired('Incorrect username, try again')])
+    password = PasswordField('Password', validators=[DataRequired('Incorrect password, try again')])
+    email = StringField('Email', validators=[DataRequired('Incorrect email, try again'), Email()])
+    submit = SubmitField('Submit')
 
 
 class LoginForm(FlaskForm):
-    name = StringField('Користувач', validators=[DataRequired('Не може бути пусте')])
-    password = PasswordField('Пароль', validators=[DataRequired('Не може бути пусте')])
-    remember_me = BooleanField('Запамятай мене!')
-    submit = SubmitField('Підтвердити')
+    name = StringField('Username', validators=[DataRequired('Incorrect username, try again')])
+    password = PasswordField('Password', validators=[DataRequired('Incorrect password, try again')])
+    remember_me = BooleanField('Remember me!')
+    submit = SubmitField('Submit!')
 
 # class Search(FlaskForm):
 #     search_field = StringField('Пошук', validators=[Length(min=0, max=400, message='За над то багато символив'),

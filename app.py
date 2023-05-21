@@ -6,7 +6,7 @@ from flask_login import LoginManager, UserMixin, current_user, login_user, logou
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user, login_user
 # from re import findall
-from db_control import User
+from db_control import User, Product
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -17,7 +17,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 login = LoginManager(app)
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -31,7 +30,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('app.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -44,7 +43,24 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('app.login'))
+
+
+@app.route('/', methods=['GET', 'POST'])
+@login_required
+def home():
+    if request.method == 'POST':
+        product = request.form.get('note')
+
+        if len(product) < 1:
+            flash('Product is too short!', category='error')
+        else:
+            new_product = Product(data=product, user_id=current_user.id)
+            db.session.add(new_product)
+            db.session.commit()
+            flash('product added!', category='success')
+
+    return render_template("home.html", user=current_user)
 
 
 @app.route('/sign-up', methods=['GET', 'POST'])
@@ -73,6 +89,10 @@ def sign_up():
             db.session.commit()
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
-            return redirect(url_for('views.home'))
+            return redirect(url_for('app.home'))
 
     return render_template("sign_up.html", user=current_user)
+
+
+if __name__ == '__main__':
+    app.run()
