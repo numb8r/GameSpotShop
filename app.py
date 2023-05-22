@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user, login_user
 # from re import findall
 from db_control import User, Product
+from forms import Sing_up, LoginFrom
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -18,6 +19,15 @@ migrate = Migrate(app, db)
 
 login = LoginManager(app)
 login.login_view = 'login'
+
+@app.route('/')
+@app.route('/index/')
+def index():
+    authenticated = True
+    if current_user.is_authenticated:
+        authenticated = False
+    return render_template('index.html', title='Home', authenticated=authenticated)
+
 # @app.route('/logout')
 # @login_required
 # def logout():
@@ -27,32 +37,23 @@ login.login_view = 'login'
 def load_user(id):
     return User.query.get(int(id))
 
-@app.route('/login', methods=['GET', 'POST'])
-@login_required
+
+@app.route('/login', methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+    form = LoginFrom()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            return redirect(url_for("login"))
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for("index"))
 
-        user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
-                flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('app.home'))
-            else:
-                flash('Incorrect password, try again.', category='error')
-        else:
-            flash('Email does not exist.', category='error')
-
-    return render_template("login.html", user=current_user)
-
-
-
+    return render_template("login.html", title="Login", form=form)
 
 
 @app.route('/', methods=['GET', 'POST'])
-
 def home():
     if request.method == 'POST':
         product = request.form.get('note')
@@ -68,36 +69,18 @@ def home():
     return render_template("home.html", user=current_user)
 
 
-@app.route('/sign-up', methods=['GET', 'POST'])
-def sign_up():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        first_name = request.form.get('firstName')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
 
-        user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email already exists.', category='error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif len(first_name) < 2:
-            flash('First name must be greater than 1 character.', category='error')
-        elif password1 != password2:
-            flash('Passwords don\'t match.', category='error')
-        elif len(password1) < 7:
-            flash('Password must be at least 7 characters.', category='error')
-        else:
-            new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='sha256'))
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user, remember=True)
-            flash('Account created!', category='success')
-            return redirect(url_for('app.home'))
+
+@app.route('/sign_up', methods=['GET', 'POST'])
+def sign_up():
+    form = Sing_up()
+    if form.validate_on_submit():
+        new_user = User(username=form.username.data, email=form.email.data, password_hash=form.password.data)
+        new_user.set_password(form.password.data)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Account created!', category='success')
+        return redirect(url_for('login'))
 
     return render_template("sign_up.html", user=current_user)
 
-
-if __name__ == '__main__':
-    app.run()
