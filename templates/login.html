@@ -1,21 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Login</h1>
-<div class="form text-center row justify-content-center">
-    <form action="" method="post" class="col-6 p-2 justify-content-center form-inline">
-        {{ form.username.label }}
-        {{ form.username(class_='form-control') }}
-        {% for error in form.username.errors %}
-            <p style="color: red;">[{{error}}]</p>
-        {% endfor %}
-        {{ form.password.label }}
-        {{ form.password(class_='form-control') }}
-        {% for error in form.password.errors %}
-            <p style="color: red;">[{{error}}]</p>
-        {% endfor %}
-        {{ form.submit(class_='form-control my-3 col-sm-3') }}
+    <h1>Login</h1>
+    <form action="" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }} <br>
+          {% for error in form.username.errors %}
+        <span style="color: red;">[{{error}}]</span>
+          {% endfor %}
+      </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit() }}</p>
     </form>
-    <a href="/sing_up" class="nav-link px-2 link-dark">You need sing up!</a>
-</div>
+    <a href="/sing_up">You need sing up!</a>
 {% endblock %}
