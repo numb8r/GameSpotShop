@@ -51,7 +51,7 @@ def login():
     return render_template("login.html", title="Login", form=form)
 
 
-@app.route('/sign_up', methods=['GET', 'POST'])
+@app.route('/sing_up', methods=['GET', 'POST'])
 def sign_up():
     form = Sing_up()
     if form.validate_on_submit():
@@ -61,4 +61,4 @@ def sign_up():
         db.session.commit()
         flash('Account created!', category='success')
         return redirect(url_for('login'))
-    return render_template('sign_up.html', title='Sing up', form=form)
+    return render_template('sing_up.html', title='Sing up', form=form)
