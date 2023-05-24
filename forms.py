@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, FileField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FloatField
 from wtforms.validators import DataRequired, Email, EqualTo
 from db_control import User
 from flask import flash
@@ -30,7 +30,8 @@ class LoginFrom(FlaskForm):
     remember_me = BooleanField('Remember Me!')
     submit = SubmitField('Sing in')
 
-# class Search(FlaskForm):
-#     search_field = StringField('Пошук', validators=[Length(min=0, max=400, message='За над то багато символив'),
-#                                                     DataRequired('Не може бути пусте')])
-#     submit = SubmitField('Пошук!')
+class GameaddFrom(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    dev = StringField('Username', validators=[DataRequired()])
+    price = FloatField('Price', validators=[DataRequired()])
+    submit = SubmitField('Add game')

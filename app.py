@@ -1,13 +1,11 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request ,session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from datetime import datetime
-from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
+from flask_login import LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import current_user, login_user
-# from re import findall
-from db_control import User, Product
-from forms import Sing_up, LoginFrom
+from flask_login import current_user, login_user, login_required
+from db_control import User, Game
+from forms import Sing_up, LoginFrom, GameaddFrom
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -62,3 +60,9 @@ def sign_up():
         flash('Account created!', category='success')
         return redirect(url_for('login'))
     return render_template('sing_up.html', title='Sing up', form=form)
+
+@app.route('/Game/<game>')
+@login_required
+def game(game):
+    game = Game.query.filter_by(name=game).first()
+

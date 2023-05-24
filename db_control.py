@@ -1,23 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
-# from flask_security import RoleMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy.sql import func
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo
 
 db = SQLAlchemy()
 
-class Product(db.Model):
+class Game(db.Model, UserMixin):
+    __tablename__ = 'Game'
     id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(60), index=True, unique=True)
+    dev = db.Column(db.String(60), index=True, unique=True)
+    price = db.Column(db.Float, index=True)
 
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(60), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
