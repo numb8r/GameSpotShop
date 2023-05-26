@@ -4,8 +4,8 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user, login_user, login_required
-from db_control import User, Game
-from forms import Sing_up, LoginFrom, GameaddFrom
+from db_control import User, Games
+from forms import Sing_up, LoginFrom, AdminaddFrom
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -64,5 +64,18 @@ def sign_up():
 @app.route('/Game/<game>')
 @login_required
 def game(game):
-    game = Game.query.filter_by(name=game).first()
+    game = Games.query.filter_by(name=game).first()
 
+@app.route('/add_items', methods=['GET', 'POST'])
+def add_items():
+    form = AdminaddFrom()
+    if current_user.username == 'Admin':
+        if form.validate_on_submit():
+            add_prod = Games(name=form.name.data, price=form.price.data, developer=form.dev.data,
+                                genre=form.genre.data)
+            db.session.add(add_prod)
+            db.session.commit()
+            return redirect(url_for('index'))
+    else:
+        flash('You is admin : )')
+    return render_template('add_items.html', form=form, title='Add Games')

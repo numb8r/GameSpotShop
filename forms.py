@@ -30,8 +30,9 @@ class LoginFrom(FlaskForm):
     remember_me = BooleanField('Remember Me!')
     submit = SubmitField('Sing in')
 
-class GameaddFrom(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+class AdminaddFrom(FlaskForm):
+    name = StringField('Name game', validators=[DataRequired()])
     dev = StringField('Username', validators=[DataRequired()])
+    genre = StringField('Genre', validators=[DataRequired()])
     price = FloatField('Price', validators=[DataRequired()])
     submit = SubmitField('Add game')

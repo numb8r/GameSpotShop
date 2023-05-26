@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 
 db = SQLAlchemy()
 
-class Game(db.Model, UserMixin):
+class Games(db.Model, UserMixin):
     __tablename__ = 'Game'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), index=True, unique=True)
