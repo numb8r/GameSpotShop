@@ -32,7 +32,7 @@ class LoginFrom(FlaskForm):
 
 class AdminaddFrom(FlaskForm):
     name = StringField('Name game', validators=[DataRequired()])
-    dev = StringField('Username', validators=[DataRequired()])
+    developer = StringField('Username', validators=[DataRequired()])
     genre = StringField('Genre', validators=[DataRequired()])
     price = FloatField('Price', validators=[DataRequired()])
     submit = SubmitField('Add game')

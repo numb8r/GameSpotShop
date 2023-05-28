@@ -1,10 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, flash, request ,session
+from flask import Flask, render_template, redirect, url_for, flash, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user, login_user, login_required
-from db_control import User, Games
+from db_control import User, Games, db
 from forms import Sing_up, LoginFrom, AdminaddFrom
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ app.config["SECRET_KEY"] = '1234'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.app_context().push()
 
-db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 
 login = LoginManager(app)
@@ -58,24 +58,26 @@ def sign_up():
         db.session.add(new_user)
         db.session.commit()
         flash('Account created!', category='success')
-        return redirect(url_for('login'))
+        return redirect('login')
     return render_template('sing_up.html', title='Sing up', form=form)
+
 
 @app.route('/Game/<game>')
 @login_required
 def game(game):
     game = Games.query.filter_by(name=game).first()
 
+
 @app.route('/add_items', methods=['GET', 'POST'])
 def add_items():
     form = AdminaddFrom()
     if current_user.username == 'Admin':
         if form.validate_on_submit():
-            add_prod = Games(name=form.name.data, price=form.price.data, developer=form.dev.data,
-                                genre=form.genre.data)
+            add_prod = Games(name=form.name.data, price=form.price.data, developer=form.developer.data,
+                             genre=form.genre.data)
             db.session.add(add_prod)
             db.session.commit()
-            return redirect(url_for('index'))
+            return redirect('index')
     else:
-        flash('You is admin : )')
+        flash('You are the admin : )')
     return render_template('add_items.html', form=form, title='Add Games')
