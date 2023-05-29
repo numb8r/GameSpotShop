@@ -62,22 +62,27 @@ def sign_up():
     return render_template('sing_up.html', title='Sing up', form=form)
 
 
-@app.route('/Game/<game>')
+@app.route('/games', methods=['GET', 'POST'])
 @login_required
-def game(game):
-    game = Games.query.filter_by(name=game).first()
+def games():
+    games = Games.query.all()
+
+    if request.method == 'POST':
+        new_games = []
+        checkboxes = request.form.getlist('name')
+        for i in games:
+            if i.name in checkboxes:
+                new_games.append(i)
+        return render_template('games.html', title='Game', games=new_games, dev=games)
 
 
 @app.route('/add_items', methods=['GET', 'POST'])
 def add_items():
     form = AdminaddFrom()
-    if current_user.username == 'Admin':
+    if current_user.username == 'Misha17':  # password: 5665
         if form.validate_on_submit():
             add_prod = Games(name=form.name.data, price=form.price.data, developer=form.developer.data,
                              genre=form.genre.data)
             db.session.add(add_prod)
             db.session.commit()
-            return redirect('index')
-    else:
-        flash('You are the admin : )')
-    return render_template('add_items.html', form=form, title='Add Games')
+        return render_template('add_items.html', form=form, title='Add Games')
