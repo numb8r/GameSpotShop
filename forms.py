@@ -26,7 +26,7 @@ class LoginFrom(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    password1 = PasswordField('Repaat password', validators=[DataRequired(), EqualTo('password')])
+    password1 = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
     remember_me = BooleanField('Remember Me!')
     submit = SubmitField('Sing in')
 
