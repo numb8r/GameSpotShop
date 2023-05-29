@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, session
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -19,10 +18,13 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
 @app.route('/')
 @app.route('/index/')
 def index():
@@ -50,6 +52,7 @@ def login():
         return redirect(url_for("add_items"))
 
     return render_template("login.html", title="Login", form=form)
+
 
 @app.route('/sing_up', methods=['GET', 'POST'])
 def sign_up():

@@ -20,6 +20,13 @@
             <span style="color: red;">[{{error}}]</span>
             {% endfor %}
         </p>
+        <p>
+            {{ form.genre.label }}<br>
+            {{ form.genre(size=32) }}
+            {% for error in form.genre.errors %}
+            <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
          <p>
             {{ form.price.label }}<br>
             {{ form.price(size=32) }}
