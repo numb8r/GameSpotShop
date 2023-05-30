@@ -7,6 +7,8 @@
     {% else %}
     <title>Basic Title</title>
     {% endif %}
+    <link rel="stylesheet" href="/GameSpotShop/styles/index.css">
+    <script src="/GameSpotShop/static/main.js"></script>
 </head>
 <body>
     <div>
@@ -18,6 +20,17 @@
         <a href="/add_items"> Add items</a>
     </div>
     <hr>
+    <div class="btns">
+        <button type="button" data-menu="all">All</button>
+        <button type="button" data-menu="green">Name</button>
+        <button type="button" data-menu="pirple">Developer</button>
+        <button type="button" data-menu="red">Price</button>
+    </div>
+    <div class="allwrps">
+        <div data-menu="green" class="single" style="background-color: green;">{{ form.name.label }}</div>
+        <div data-menu="pirple" class="single" style="background-color: blueviolet;">{{ form.dev.label }}</div>
+        <div data-menu="red" class="single">{{ form.price.label }}</div>
+    </div>
     {% block content %} {% endblock %}
 
 </body>

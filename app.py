@@ -32,6 +32,15 @@ def index():
     if current_user.is_authenticated:
         authenticated = False
     return render_template('index.html', title='Home', authenticated=authenticated)
+def games():
+    games = Games.query.all()
+    if request.method == 'POST':
+        new_games = []
+        checkboxes = request.form.getlist('name')
+        for i in games:
+            if i.name in checkboxes:
+                new_games.append(i)
+            return render_template('index.html', title='Home')
 
 
 @login.user_loader
@@ -65,20 +74,6 @@ def sign_up():
         flash('Account created!', category='success')
         return redirect('login')
     return render_template('sing_up.html', title='Sing up', form=form)
-
-
-@app.route('/games', methods=['GET', 'POST'])
-@login_required
-def games():
-    games = Games.query.all()
-
-    if request.method == 'POST':
-        new_games = []
-        checkboxes = request.form.getlist('name')
-        for i in games:
-            if i.name in checkboxes:
-                new_games.append(i)
-        return render_template('games.html', title='Game', games=new_games, dev=games)
 
 
 @app.route('/add_items', methods=['GET', 'POST'])
