@@ -1,8 +1,8 @@
-"""web
+"""web_site
 
-Revision ID: fff8516401c5
+Revision ID: ab4ac450a863
 Revises: 
-Create Date: 2023-05-28 17:23:41.765594
+Create Date: 2023-06-01 16:03:11.471503
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fff8516401c5'
+revision = 'ab4ac450a863'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=60), nullable=True),
     sa.Column('dev', sa.String(length=60), nullable=True),
-    sa.Column('price', sa.Float(), nullable=True),
+    sa.Column('price', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('Game', schema=None) as batch_op:
