@@ -1,4 +1,25 @@
+{% extends 'base.html' %}
 
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/GameSpotShop/styles/index.css">
+</head>
+<body>
+<div class="btns">
+    <button type="button" data-menu="all">All</button>
+    <button type="button" data-menu="green">Name</button>
+    <button type="button" data-menu="pirple">Developer</button>
+    <button type="button" data-menu="red">Price</button>
+</div>
+<div class="allwrps">
+    <div data-menu="green" class="single" style="background-color: green;">{{ name }}</div>
+    <div data-menu="pirple" class="single" style="background-color: blueviolet;">{{ dev }}</div>
+    <div data-menu="red" class="single" style="background-color: red;">{{ price }}</div>
+</div>
+{% block content %}
+<script>
         function Filtering() {
             let buttons = document.querySelectorAll('.btns button')
             let blocks  = document.querySelectorAll('.single')
@@ -45,3 +66,9 @@
             })
         }
         Filtering()
+
+
+</script>
+</body>
+</html>
+{% endblock %}

@@ -26,12 +26,15 @@ def logout():
 
 
 @app.route('/')
-@app.route('/index/')
+@app.route('/index')
 def index():
     authenticated = True
     if current_user.is_authenticated:
         authenticated = False
     return render_template('index.html', title='Home', authenticated=authenticated)
+
+
+@app.route('/games', methods=['GET', 'POST'])
 def games():
     games = Games.query.all()
     if request.method == 'POST':
@@ -40,7 +43,9 @@ def games():
         for i in games:
             if i.name in checkboxes:
                 new_games.append(i)
-            return render_template('index.html', title='Home')
+        return render_template('index.html', title='Home', games=new_games)
+
+    return render_template('index.html', title='Home', games=games)
 
 
 @login.user_loader
@@ -63,17 +68,17 @@ def login():
     return render_template("login.html", title="Login", form=form)
 
 
-@app.route('/sing_up', methods=['GET', 'POST'])
+@app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
     form = Sing_up()
     if form.validate_on_submit():
-        new_user = User(username=form.username.data, email=form.email.data, password_hash=form.password.data)
+        new_user = User(username=form.username.data, email=form.email.data)
         new_user.set_password(form.password.data)
         db.session.add(new_user)
         db.session.commit()
         flash('Account created!', category='success')
-        return redirect('login')
-    return render_template('sing_up.html', title='Sing up', form=form)
+        return redirect(url_for('login'))
+    return render_template('sign_up.html', title='Sign Up', form=form)
 
 
 @app.route('/add_items', methods=['GET', 'POST'])
@@ -82,9 +87,8 @@ def add_items():
     form = AdminaddFrom()
     if current_user.username == 'Misha17':  # password: 5665
         if form.validate_on_submit():
-            add_prod = Games(name=form.name.data, price=form.price.data, developer=form.dev.data,
-                             genre=form.genre.data)
+            add_prod = Games(name=form.name.data, price=form.price.data, dev=form.dev.data)
             db.session.add(add_prod)
             db.session.commit()
-            return redirect('add_items')
+            return redirect(url_for('add_items'))
         return render_template('add_items.html', form=form, title='Add Games')

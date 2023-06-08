@@ -1,84 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    {% if title %}
     <title>{{ title }}</title>
-    {% else %}
-    <title>Basic Title</title>
-    {% endif %}
-    <link rel="stylesheet" href="/GameSpotShop/styles/index.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div>
-        <a href="/">Home</a>
+    <h1>{{ title }}</h1>
+
+    {% if authenticated %}
+        <p>Welcome, guest!</p>
+        <a href="/login">Login</a> | <a href="/sing_up">Sign up</a>
+    {% else %}
+        <p>Welcome, {{ current_user.username }}!</p>
         <a href="/logout">Logout</a>
-        {% if authenticated %}
-        <a href="/login">Login</a>
-        {% endif %}
-        <a href="/add_items"> Add items</a>
+    {% endif %}
+
+    <div class="search-container">
+        <label for="search-input">Search by Game Name:</label>
+        <input type="text" id="search-input">
+        <label for="genre-select">Genre:</label>
+        <select id="genre-select">
+            <option value="">All</option>
+            <option value="action">Action</option>
+            <option value="adventure">Adventure</option>
+            <option value="rpg">RPG</option>
+            <!-- Добавьте другие жанры по желанию -->
+        </select>
+        <button id="search-button">Search</button>
     </div>
-    <hr>
-    <div class="btns">
-        <button type="button" data-menu="all">All</button>
-        <button type="button" data-menu="green">Name</button>
-        <button type="button" data-menu="pirple">Developer</button>
-        <button type="button" data-menu="red">Price</button>
+
+    <div class="games-container">
+        {% for game in games %}
+            <div class="game" data-genre="{{ game.genre }}" data-name="{{ game.name }}">
+                <h3>{{ game.name }}</h3>
+                <p>Price: ${{ game.price }}</p>
+                <p>Developer: {{ game.developer }}</p>
+                <p>Genre: {{ game.genre }}</p>
+            </div>
+        {% endfor %}
     </div>
-    <div class="allwrps">
-        <div data-menu="green" class="single" style="background-color: green;">{{ form.name.label }}</div>
-        <div data-menu="pirple" class="single" style="background-color: blueviolet;">{{ form.dev.label }}</div>
-        <div data-menu="red" class="single">{{ form.price.label }}</div>
-    </div>
-    {% block content %} {% endblock %}
-    <script>
-        function Filtering() {
-            let buttons = document.querySelectorAll('.btns button')
-            let blocks  = document.querySelectorAll('.single')
-            buttons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    blocks.forEach(block => {
-                        block.classList.remove('active')
-                        block.style.transform = `scale(0)`;
-                        block.style.opacity = `0`;
-                        block.style.visibility = `hidden`;
-                        block.style.width = `0`;
-                        block.style.marginLeft = `0`;
-                        block.style.marginRight = `0`;
-                        block.style.height = `0`;
-                    })
 
-                    blocks.forEach(blk => {
-                        if (e.target.dataset.menu == blk.dataset.menu) {
-                            blk.classList.add('active')
-                            blk.style.transform = `scale(1)`;
-                            blk.style.opacity = `1`;
-                            blk.style.visibility = `visible`;
-                            blk.style.width = `190px`;
-                            blk.style.marginLeft = `5px`;
-                            blk.style.marginRight = `5px`;
-                            blk.style.height = `190px`;
-                        }
-                    })
-                if (e.target.dataset.menu == 'all'){
-                    blocks.forEach(block => {
-                        block.classList.add('active')
-                            block.style.transform = `scale(1)`;
-                            block.style.opacity = `1`;
-                            block.style.visibility = `visible`;
-                            block.style.width = `190px`;
-                            block.style.marginLeft = `5px`;
-                            block.style.marginRight = `5px`;
-                            block.style.height = `190px`;
-                    })
-                }
+    <a href="/add_items">Add Game</a>
 
-
-                })
-            })
-        }
-        Filtering()
-
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchInput = document.getElementById('search-input');
+        var genreSelect = document.getElementById('genre-select');
+        var searchButton = document.getElementById('search-button');
+
+        searchButton.addEventListener('click', function() {
+            var searchTerm = searchInput.value.toLowerCase();
+            var selectedGenre = genreSelect.value.toLowerCase();
+            searchGames(searchTerm, selectedGenre);
+        });
+
+        function searchGames(searchTerm, selectedGenre) {
+            var gameElements = document.getElementsByClassName('game');
+
+            for (var i = 0; i < gameElements.length; i++) {
+                var gameName = gameElements[i].getAttribute('data-name').toLowerCase();
+                var gameGenre = gameElements[i].getAttribute('data-genre').toLowerCase();
+                var isNameMatch = gameName.includes(searchTerm);
+                var isGenreMatch = selectedGenre === '' || gameGenre === selectedGenre;
+
+                if (isNameMatch && isGenreMatch) {
+                    gameElements[i].style.display = 'block';
+                } else {
+                    gameElements[i].style.display = 'none';
+                }
+            }
+        }
+    });
+</script>
